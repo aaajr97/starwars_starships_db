@@ -30,13 +30,24 @@ def forming_url(i: int):
 
 # function that appends api data to list given that the response sends a 200 code
 # code iterates through different urls as the urls differ in page number
-def add_data_to_list(i=1):
+def add_data_to_list(empty_list: list, i=1):
     url = forming_url(i)
     while get_api_status_code(url).status_code == 200:
         for ship_details in requests.get(url).json()["results"]:
-            starship_list.append(ship_details)
+            empty_list.append(ship_details)
         i += 1
         url = forming_url(i)
     return starship_list
 
-#pprint(add_data_to_list())
+
+# pprint(add_data_to_list(starship_list))
+
+# function that converts pilot details to a refrence objectID obtained from a mongodb characters collection
+def api_name_to_object_id(api_list: list):
+    for starship_details in api_list:
+        for index in range(len(starship_details['pilots'])):
+            result = requests.get(starship_details['pilots'][index]).json()
+            identification = db.characters.find_one({"name": result["name"]}, {'_id': 1})
+            starship_details['pilots'][index] = identification['_id']
+
+    return api_list
