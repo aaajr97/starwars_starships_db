@@ -14,13 +14,12 @@ starship_list = []  # list that starship data will be appended to
 
 
 # Function that obtains status code of an api
-# Function takes url link in string form as input
 def get_api_status_code(url: str):
-    api_status_code = requests.get(url).status_code
-    return api_status_code
+    api_response = requests.get(url)
+    return api_response
 
 
-# Function that forms an api url using the HTTP url components
+# Function that concatenates the different parts of a API url
 def forming_url(i: int):
     base_url = "https://swapi.dev/api"
     endpoint = "/starships/?page="
@@ -33,12 +32,11 @@ def forming_url(i: int):
 # code iterates through different urls as the urls differ in page number
 def add_data_to_list(i=1):
     url = forming_url(i)
-    while get_api_status_code(url) == 200:
+    while get_api_status_code(url).status_code == 200:
         for ship_details in requests.get(url).json()["results"]:
             starship_list.append(ship_details)
         i += 1
         url = forming_url(i)
     return starship_list
 
-
-add_data_to_list()
+#pprint(add_data_to_list())
