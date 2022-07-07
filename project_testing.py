@@ -14,10 +14,19 @@ def test_forming_url():
 
 
 def test_add_data_to_list():
-    assert len(add_data_to_list(starship_list)) == 36
-    assert add_data_to_list(starship_list)[4]['pilots'][0][:5] == 'https'
+    empty_list = []
+    assert len(add_data_to_list(empty_list)) == 36
+    assert add_data_to_list(empty_list)[4]['pilots'][0][:5] == 'https'
 
 
 def test_api_name_to_object_id():
-    pilot_details = api_name_to_object_id(add_data_to_list(starship_list))[4]['pilots']
+    pilot_details = api_name_to_object_id(starship_list)[4]['pilots']
     assert type(pilot_details[0]) == bson.objectid.ObjectId
+
+
+def test_create_starwars_mongodb_collection():
+    mongodb_starships = []
+    for document in db.starships.find({}, {'_id': 0}):
+        mongodb_starships.append(document)
+
+    assert starship_list == mongodb_starships

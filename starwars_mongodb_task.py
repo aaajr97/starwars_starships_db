@@ -37,12 +37,13 @@ def add_data_to_list(empty_list: list, i=1):
             empty_list.append(ship_details)
         i += 1
         url = forming_url(i)
-    return starship_list
+    return empty_list
 
 
-# pprint(add_data_to_list(starship_list))
+add_data_to_list(starship_list)
 
-# function that converts pilot details to a refrence objectID obtained from a mongodb characters collection
+
+# function that converts pilot details to a reference objectID obtained from a mongodb characters collection
 def api_name_to_object_id(api_list: list):
     for starship_details in api_list:
         for index in range(len(starship_details['pilots'])):
@@ -51,3 +52,26 @@ def api_name_to_object_id(api_list: list):
             starship_details['pilots'][index] = identification['_id']
 
     return api_list
+
+
+#
+#
+# # function that returns a list of mongodb collections
+def collection_name_list():
+    return db.list_collection_names()
+
+
+#
+#
+# # function that appends each item(mongodb document) from a list into a new collection
+# # function uses "collection_name_list" function to check if there is already a collection with the same name,
+# # if so, the function deletes the documents within said collection, and append new documents
+def create_starwars_mongodb_collection(object_id_list: list, collection_name: str):
+    if collection_name in collection_name_list():
+        db[collection_name].delete_many({})
+    for details in object_id_list:
+        db[collection_name].insert_one(details)
+    return object_id_list
+
+
+
