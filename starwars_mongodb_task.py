@@ -12,6 +12,7 @@ db = client['starwars']
 
 starship_list = []  # list that starship data will be appended to
 
+
 # Function that obtains status code of an api
 def get_api_status_code(url: str):
     api_response = requests.get(url)
@@ -39,7 +40,7 @@ def add_data_to_list(empty_list: list, i=1):
     return empty_list
 
 
-#add_data_to_list(starship_list)
+add_data_to_list(starship_list)
 
 
 # function that converts pilot details to a reference objectID obtained from a mongodb characters collection
@@ -66,6 +67,7 @@ def create_starwars_mongodb_collection(object_id_list: list, collection_name: st
         db[collection_name].delete_many({})
     for details in object_id_list:
         db[collection_name].insert_one(details)
+    return object_id_list
 
 
-#create_starwars_mongodb_collection(api_name_to_object_id(starship_list), 'starships')
+#pprint(create_starwars_mongodb_collection(api_name_to_object_id(starship_list), 'starships'))
