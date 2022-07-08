@@ -4,6 +4,8 @@ import requests.models
 from starwars_mongodb_task import *
 
 
+
+
 def test_get_api_status_code():
     assert type(get_api_status_code("https://swapi.dev/api/starships/?page=3")) \
            == requests.models.Response
@@ -20,13 +22,16 @@ def test_add_data_to_list():
 
 
 def test_api_name_to_object_id():
-    pilot_details = api_name_to_object_id(starship_list)[4]['pilots']
+    test_list = add_data_to_list(starship_list)
+    pilot_details = api_name_to_object_id(test_list)[4]['pilots']
     assert type(pilot_details[0]) == bson.objectid.ObjectId
 
 
 def test_create_starwars_mongodb_collection():
+    test_list = []
+    clean_test_list = api_name_to_object_id(add_data_to_list(test_list))
     mongodb_starships = []
     for document in db.starships.find({}, {'_id': 0}):
         mongodb_starships.append(document)
 
-    assert starship_list == mongodb_starships
+    assert clean_test_list == mongodb_starships
